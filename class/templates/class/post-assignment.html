@@ -1,0 +1,29 @@
+{% extends "class/base.html" %}
+
+{% block title %}
+    {{ classroom.title }} | Post Assignment
+{% endblock %}
+
+{% block main %}
+    <h1>{{ classroom.title }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Title</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="title">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="points" class="form-label">Points</label>
+          <input type="number" name="points" id="points" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label for="due" class="form-label">Due Date & Time</label>
+          <input type="datetime-local" id="due" class="form-control" name="due">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}

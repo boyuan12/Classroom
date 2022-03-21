@@ -1,0 +1,17 @@
+{% extends "class/base.html" %}
+
+{% block title %}
+    {{ classroom.title }}
+{% endblock %}
+
+{% block main %}
+    <h1>{{ classroom.title }}</h1>
+    <div class="container">
+        <div class="row align-items-start">
+          <div class="col-3">
+            Class Code: <br>
+            <b>{{ classroom.join_code }}</b>
+          </div>
+        </div>
+    </div>
+{% endblock %}
