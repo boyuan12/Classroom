@@ -12,7 +12,7 @@ def register(request):
         email = request.POST["email"]
         password = request.POST["password"]
 
-        u = User.objects.create(first_name=first_name, last_name=last_name, username=email, email=email, password=password)
+        u = User.objects.create_user(first_name=first_name, last_name=last_name, username=email, email=email, password=password)
 
         login(request, u)
 
@@ -34,6 +34,7 @@ def login_view(request):
         else:
             messages.add_message(request, messages.ERROR, 'Incorrect login credential(s)')
             return redirect("/auth/login/")
+    return render(request, "authentication/login.html")
 
 
 def logout_view(request):

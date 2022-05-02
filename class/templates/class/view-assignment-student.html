@@ -1,0 +1,48 @@
+{% extends "class/base.html" %}
+
+{% block title %}
+    {{ classroom.title }}
+{% endblock %}
+
+{% block main %}
+    <h1>{{ classroom.title }}</h1>
+    <div class="container">
+        <h2>{{ assignment.title }}</h2>
+        <p style="font: 25px">{{ assignment.description }}</p>
+    </div>
+
+    {% if role == "student" %}
+        <h3>Attach your work</h3>
+        <!-- Local file, Google Drive Integration, Text-->
+        <form method="POST">
+            {% csrf_token %}
+            {% if submission %}
+                <div class="mb-3" id="unsubmit">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="work" disabled>{{ submission.text }}</textarea>
+                    <button type="button" class="btn btn-primary" id="submit">Unsubmit</button>
+                    <p>Note: When you click on unsubmit button, this submission will be deleted. This action is irrevisble.</p>
+                </div>
+                <div class="mb-3" id="submitForm" style="display: none">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="work"></textarea>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            {% else %}
+                <div class="mb-3">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="work"></textarea>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            {% endif %}
+        </form>
+    {% endif %}
+
+    <script>
+        document.getElementById("submit").onclick = () => {
+            document.getElementById("submitForm").style = ""
+            document.getElementById("unsubmit").style = "display: none"
+
+            fetch(`/classroom/{{ classroom.join_code }}/assignment/{{ assignment.slug }}/delete/`, {
+                method: "POST"
+            })
+        }
+    </script>
+{% endblock %}

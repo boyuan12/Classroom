@@ -1,0 +1,24 @@
+{% extends "class/base.html" %}
+
+{% block title %}
+    {{ classroom.title }}
+{% endblock %}
+
+{% block main %}
+    <h1>{{ classroom.title }}</h1>
+    <div class="container">
+        <div class="row align-items-start">
+          <div class="col-3">
+            Class Code: <br>
+            <b>{{ classroom.join_code }}</b>
+          </div>
+          <div class="col-9">
+              <ul>
+                {% for a in assignments %}
+                    <li><a href="/classroom/{{ classroom.join_code }}/assignment/{{ a.slug }}">{{ a.title }}</a></li>
+                {% endfor %}
+              </ul>
+          </div>
+        </div>
+    </div>
+{% endblock %}

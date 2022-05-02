@@ -27,3 +27,13 @@ def create_classroom(request):
     else:
         return render(request, "dashboard/create.html")
 
+def join_classroom(request):
+    if request.method == "POST":
+        code = request.POST["code"]
+        classroom = Classroom.objects.get(join_code=code)
+        StudentClassroom.objects.create(user=request.user, classroom=classroom)
+
+        return redirect(f"/classroom/{code}/")
+
+    else:
+        return render(request, "dashboard/join-classroom.html")
