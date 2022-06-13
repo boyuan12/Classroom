@@ -121,3 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://boyuan12-classroom-76w5pjj93r66r-8000.githubpreview.dev"
+]

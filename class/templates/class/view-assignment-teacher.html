@@ -1,0 +1,48 @@
+{% extends "class/base.html" %}
+
+{% block title %}
+    {{ classroom.title }}
+{% endblock %}
+
+{% block main %}
+    <h1>{{ classroom.title }}</h1>
+    <div class="container">
+        <h2>{{ assignment.title }}</h2>
+        <p style="font: 25px">{{ assignment.description }}</p>
+    </div>
+
+    <div class="col-3">
+        <h3>Submitted Students: </h3>
+        <ul>
+            {% for sub in submissions %}
+                <li>{{ sub.user.first_name }} {{ sub.user.last_name }} </li>
+                <form>
+                    <input type="number" min="0" max="{{ assignment.points }}" value="{{ sub.points }}" id="{{ sub.id }}" onblur="sendScore('{{ sub.id }}')"> / {{ assignment.points }}
+                </form>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col-3">
+        <h3>Did not submit Students: </h3>
+        <ul>
+            {% for user in did_not_submit %}
+                <li>{{ user.first_name }} {{ user.last_name }} </li>
+                <form>
+                    <input type="number" min="0" max="{{ assignment.point }}" value="{{ sub.points }}" id="{{ sub.id }}" onblur="sendScore('{{ sub.id }}')"> / {{ assignment.point }}
+                </form>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+        function sendScore(subId) {
+            fetch(`/classroom/{{ classroom.join_code }}/assignment/{{ assignment.slug }}/score/`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    "subId": subId,
+                    "score": document.getElementById(subId).value
+                })
+            })
+        }
+    </script>
+{% endblock %}

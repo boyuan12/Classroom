@@ -58,13 +58,30 @@ def view_assignment(request, class_id, assignment_slug):
             submission = Submission.objects.get(user=request.user, assignment=assignment)
         except Submission.DoesNotExist:
             pass
+    
+        if role == "student":
+            return render(request, "class/view-assignment-student.html", {
+                "assignment": assignment,
+                "classroom": Classroom.objects.get(join_code=class_id),
+                "role": role,
+                "submission": submission
+            })
+        else:
+            submissions = Submission.objects.filter(assignment=assignment)
+            submitted_student = [sub.user for sub in submissions]
+            all_students = [sc.user for sc in StudentClassroom.objects.filter(classroom=classroom)]
+            did_not_submit = []
 
-        return render(request, "class/view-assignment-student.html", {
-            "assignment": assignment,
-            "classroom": Classroom.objects.get(join_code=class_id),
-            "role": role,
-            "submission": submission
-        })
+            for stu in all_students:
+                if stu not in submitted_student:
+                    did_not_submit.append(stu)
+
+            return render(request, "class/view-assignment-teacher.html", {
+                "assignment": assignment,
+                "classroom": Classroom.objects.get(join_code=class_id),
+                "submissions": submissions,
+                "did_not_submit": did_not_submit
+            })
 
 @csrf_exempt
 def delete_submission_api(request, class_id, assignment_slug):
@@ -80,4 +97,20 @@ def delete_submission_api(request, class_id, assignment_slug):
 
         assignment.save()
 
+        return JsonResponse({"success": True})
+
+@csrf_exempt
+def score_assignment_api(request, class_id, assignment_slug):
+    if request.method == "POST":
+        data = json.loads(request.body.decode("utf-8"))
+        # class_id = data["classId"]
+        # assignment_slug = data["slug"]
+
+        submission_id = data["subId"]
+        points = int(data["score"])
+        
+        sub = Submission.objects.get(id=int(submission_id))
+        sub.points = points
+        sub.save()
+        
         return JsonResponse({"success": True})

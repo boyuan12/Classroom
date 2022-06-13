@@ -24,3 +24,4 @@ class Submission(models.Model):
     files = models.ForeignKey(File, null=True, on_delete=models.CASCADE)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     text = models.TextField(null=True)
+    points = models.IntegerField(null=True)
