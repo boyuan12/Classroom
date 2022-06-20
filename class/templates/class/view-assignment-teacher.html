@@ -15,7 +15,7 @@
         <h3>Submitted Students: </h3>
         <ul>
             {% for sub in submissions %}
-                <li>{{ sub.user.first_name }} {{ sub.user.last_name }} </li>
+                <li><a href="work/{{ sub.user.id }}" target="_blank">{{ sub.user.first_name }} {{ sub.user.last_name }}</a></li>
                 <form>
                     <input type="number" min="0" max="{{ assignment.points }}" value="{{ sub.points }}" id="{{ sub.id }}" onblur="sendScore('{{ sub.id }}')"> / {{ assignment.points }}
                 </form>

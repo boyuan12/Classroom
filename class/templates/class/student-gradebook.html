@@ -1,0 +1,26 @@
+{% extends "class/base.html" %}
+
+{% block title %}
+    Student Gradebook
+{% endblock %}
+
+{% block main %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Assignment</th>
+                <th scope="col">Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sub in submissions %}
+                <td>{{ sub.assignment.title }}</td>
+                <td>{{ sub.points }} / {{ sub.assignment.points }}</td>
+            {% endfor %}
+            <tr class="table-light">
+                <td scope="row">Overall Grade: </td>
+                <td>{{ grade }}%</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

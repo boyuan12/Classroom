@@ -6,6 +6,7 @@ from .models import Assignment, Topic, Submission
 from django.template.defaultfilters import slugify
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -114,3 +115,47 @@ def score_assignment_api(request, class_id, assignment_slug):
         sub.save()
         
         return JsonResponse({"success": True})
+
+def view_student_work(request, class_id, assignment_slug, stu_id):
+    classroom = Classroom.objects.get(join_code=class_id)
+    assignment = Assignment.objects.get(classroom=classroom, slug=assignment_slug)
+    user = User.objects.get(id=stu_id)
+
+    submission = Submission.objects.get(user=user, assignment=assignment)
+
+    return render(request, "class/view-student-work.html", {
+        "classroom": classroom,
+        "assignment": assignment,
+        "student": user,
+        "submission": submission,
+    })
+
+def view_student_gradebook(request, class_id):
+    classroom = Classroom.objects.get(join_code=class_id)
+    assignments = Assignment.objects.filter(classroom=classroom)
+    submissions = []
+
+
+    for a in assignments:
+        submission = Submission.objects.get(assignment=a, user=request.user)
+        submissions.append(submission)
+    
+
+    return render(request, "class/student-gradebook.html", {
+        "submissions": submissions,
+        "classroom": classroom,
+        "grade": calc_grade(submissions)
+    })
+
+def calc_grade(submissions):
+    """
+    Add all the total points and Add all the actual points and divide the actual points by the total points
+    """
+    possible_score = 0
+    student_score = 0
+
+    for sub in submissions:
+        possible_score += sub.assignment.points
+        student_score += sub.points
+    
+    return round(student_score / possible_score * 100, 2) 

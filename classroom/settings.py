@@ -123,5 +123,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://boyuan12-classroom-76w5pjj93r66r-8000.githubpreview.dev"
+    "https://boyuan12-classroom-76w5pjj93r66r-8000.githubpreview.dev",
+    "https://8000-boyuan12-classroom-7wpk4b33gw2.ws-us47.gitpod.io",
 ]

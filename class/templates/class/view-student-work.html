@@ -1,0 +1,20 @@
+{% extends "class/base.html" %}
+
+{% block title %}
+    {{ classroom.title }}
+{% endblock %}
+
+{% block main %}
+    <h1>{{ classroom.title }}</h1>
+    <div class="container">
+        <h2>{{ assignment.title }}</h2>
+        <p style="font: 25px">{{ assignment.description }}</p>
+        
+        <h3>Student: {{ user.first_name }} {{ user.last_name }}</h2>
+        <h4>Student's Work</h4>
+        <div>
+            {{ submission.text }}
+        </div>
+    </div>
+
+{% endblock %}

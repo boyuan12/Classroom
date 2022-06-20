@@ -9,6 +9,11 @@
     <div class="container">
         <h2>{{ assignment.title }}</h2>
         <p style="font: 25px">{{ assignment.description }}</p>
+        {% if submission.points != None %}
+            <h3>Your grade for this assignment is: {{ submission.points }} / {{ submission.assignment.points }}</h3>
+        {% else %}
+            <h3>Your teacher didn't grade your assignment yet.</h3>
+        {% endif %}
     </div>
 
     {% if role == "student" %}
