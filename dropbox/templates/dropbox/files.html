@@ -1,0 +1,19 @@
+{% extends "dropbox/base.html" %}
+
+{% block title %}
+    Files
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        {% for r in results %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{ r.2 }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">{{ r.1 }}</h5>
+                <a href="/dropbox/selected/{{ r.0 }}" class="btn btn-primary">Select this file</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

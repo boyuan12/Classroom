@@ -1,11 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 import requests
 import json
 
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+
+from helpers import convert_file
+
 cloudinary.config(
     cloud_name = "boyuan12",
     api_key = "893778436618783",
@@ -31,13 +36,21 @@ def dropbox_authorized(request):
     return JsonResponse(data.json())
 
 def search_files(request):
+    if request.method == "GET":
+        return render(request, "dropbox/search.html")
+
+
+@csrf_exempt
+def search_files_api(request):
+    query = request.GET["query"]
+
     data = requests.post("https://api.dropboxapi.com/2/files/search_v2", headers={
         'Authorization': f'Bearer {request.session["DROPBOX_ACCESS_TOKEN"]}'
     }, json={
-        "query": "dwm"
+        "query": query
     })
 
-    results = []
+    results = [] # [[id, filename, prev_url]]
 
     for f in data.json()["matches"]:
         id = f["metadata"]["metadata"]["id"]
@@ -48,10 +61,12 @@ def search_files(request):
             })
         }, stream=True)
 
-        print(data.text)
         r = cloudinary.uploader.upload(data.content)
-        img_url = r["secure_url"]
-        
-        return HttpResponse(img_url)
+        pdf_url = r["secure_url"]
+        prev_url = convert_file(pdf_url, "png")
+        filename = f["metadata"]["metadata"]["name"]
 
+        results.append([id, filename, prev_url])
+
+    return JsonResponse(results, safe=False)
     # return JsonResponse(data.json())

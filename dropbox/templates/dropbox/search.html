@@ -6,8 +6,37 @@
 
 {% block main %}
     <div class="container">
-        <ul>
-            
-        </ul>
+        <form>
+            <div class="mb-3">
+              <label for="search" class="form-label">Search</label>
+              <input type="text" class="form-control" id="search">
+            </div>
+            <button type="button" class="btn btn-primary" id="button">Submit</button>
+        </form>
+
+        <div id="results"></div>
     </div>
+
+    <script>
+        document.getElementById("button").onclick = () => {
+            document.getElementById("results").innerHTML = `<img src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif">`
+            fetch(`/dropbox/api-search-file?query=${document.getElementById("search").value}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                document.getElementById("results").innerHTML = ""
+                for (let i=0; i<data.length; i++) {
+                    var div = document.createElement("DIV");
+                    div.setAttribute("class", "card")
+                    div.setAttribute("style", "width: 18rem")
+                    div.innerHTML = `<img src="${data[i][2]}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                    <h5 class="card-title">${data[i][1]}</h5>
+                    <a href="/dropbox/selected/${data[i][0]}" class="btn btn-primary">Select this file</a>
+                    </div>`
+                    document.getElementById("results").appendChild(div)
+                }
+            })
+        }
+    </script>
 {% endblock %}
