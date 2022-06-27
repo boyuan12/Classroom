@@ -21,4 +21,5 @@ urlpatterns = [
     path("auth/", include("authentication.urls")),
     path("", include("dashboard.urls")),
     path("classroom/", include("class.urls")),
+    path("dropbox/", include("dropbox.urls")),
 ]

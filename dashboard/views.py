@@ -2,9 +2,14 @@ from django.shortcuts import redirect, render
 from .models import Classroom, StudentClassroom, TeacherClassroom
 from helpers import random_str
 from itertools import chain
+from django.http import HttpResponse
 
 # Create your views here.
 def view_all_classrooms(request):
+    print(request.user.username)
+    if request.user.username == "":
+        return HttpResponse("Hello")
+
     s = StudentClassroom.objects.filter(user=request.user)
     t = TeacherClassroom.objects.filter(user=request.user)
     classrooms = list(chain(s, t))
