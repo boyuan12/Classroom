@@ -1,7 +1,15 @@
 from string import ascii_lowercase
 import random
 import cloudconvert
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
+cloudinary.config(
+    cloud_name = "boyuan12",
+    api_key = "893778436618783",
+    api_secret = "X4LufXPHxvv4hROS3VZWYyR3tIE",
+)
 
 def random_str(digit=7):
     return "".join([random.choice(ascii_lowercase) for _ in range(digit)])
@@ -32,3 +40,6 @@ def convert_file(original_url, output_file_format):
     res = cloudconvert.Task.wait(id=export_task_id) # Wait for job completion
     file = res.get("result").get("files")[0]
     return file["url"]
+
+def cloudinary_upload(file):
+    cloudinary.uploader.upload(file, resource_type = "raw")

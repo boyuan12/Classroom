@@ -33,12 +33,23 @@ def dropbox_authorized(request):
         "redirect_uri": f"{BASE_URL}/dropbox/authorized",
     }, auth=(DROPBOX_APP_KEY, DROPBOX_APP_SECRET))
     request.session["DROPBOX_ACCESS_TOKEN"] = data.json()["access_token"]
-    return JsonResponse(data.json())
+    return redirect("/dropbox/search")
 
 def search_files(request):
     if request.method == "GET":
         return render(request, "dropbox/search.html")
 
+def selected_file(request, file_id):
+    data = requests.post("https://content.dropboxapi.com/2/files/download", headers={
+        'Authorization': f'Bearer {request.session["DROPBOX_ACCESS_TOKEN"]}',
+        "Dropbox-API-Arg": json.dumps({"path": file_id})
+    }, stream=True)
+    print(json.loads(dict(data.headers)["Dropbox-Api-Result"])["name"])
+    name = json.loads(dict(data.headers)["Dropbox-Api-Result"])["name"]
+    # name = dict(data.headers["Dropbox-Api-Result"]["name"])
+    r = cloudinary.uploader.upload(data.content, resource_type="raw")
+    url = r["secure_url"]
+    return redirect(f"/classroom/{request.session['previous_classroom_code']}/assignment/{request.session['previous_assignment_slug']}/?dropbox_url={url}?dropbox_file_name={name}")
 
 @csrf_exempt
 def search_files_api(request):
@@ -70,3 +81,4 @@ def search_files_api(request):
 
     return JsonResponse(results, safe=False)
     # return JsonResponse(data.json())
+

@@ -5,5 +5,6 @@ urlpatterns = [
     path("authorize/", views.dropbox_oauth),
     path("authorized/", views.dropbox_authorized),
     path("search/", views.search_files),
-    path("api-search-file/", views.search_files_api)
+    path("api-search-file/", views.search_files_api),
+    path("selected/<str:file_id>/", views.selected_file)
 ]

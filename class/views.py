@@ -61,6 +61,8 @@ def view_assignment(request, class_id, assignment_slug):
             pass
     
         if role == "student":
+            request.session["previous_classroom_code"] = class_id
+            request.session["previous_assignment_slug"] = assignment_slug
             return render(request, "class/view-assignment-student.html", {
                 "assignment": assignment,
                 "classroom": Classroom.objects.get(join_code=class_id),
